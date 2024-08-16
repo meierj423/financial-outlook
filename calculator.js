@@ -54,27 +54,30 @@ function calculate() {
     // Calculate Monthly Surplus
     const monthlySurplus = netMonthlyIncome - totalMonthlyExpenses;
 
-    // Update results on the page with conditional formatting
-    updateResult("grossIncome", `Gross Monthly Income: $${grossMonthlyIncome.toFixed(2)}`);
-    updateResult("netIncome", `Net Monthly Income: $${netMonthlyIncome.toFixed(2)}`);
-    updateResult("emergencyFund", `Emergency Fund Needed: $${emergencyFundNeeded.toFixed(2)}`);
-    updateResult("downPaymentResult", `Down Payment: $${downPayment.toFixed(2)}`, downPayment > savings ? "red" : "green");
-    updateResult("closingCosts", `Closing Costs: $${closingCosts.toFixed(2)}`);
-    updateResult("cashLeftOver", `Cash Left Over: $${cashLeftOver.toFixed(2)}`, cashLeftOver < 0 ? "red" : "green");
-    updateResult("monthlyMortgagePayment", `Monthly Mortgage Payment: $${monthlyMortgagePayment.toFixed(2)}`);
-    updateResult("monthlyPropertyTax", `Monthly Property Tax: $${monthlyPropertyTax.toFixed(2)}`);
-    updateResult("monthlyHomeInsurance", `Monthly Home Insurance: $${monthlyHomeInsurance.toFixed(2)}`);
-    updateResult("totalMonthlyHousingExpenses", `Total Monthly Housing Expenses: $${totalMonthlyHousingExpenses.toFixed(2)}`);
+    // Format numbers with commas
+    const formatCurrency = (value) => value.toLocaleString("en-US", { style: "currency", currency: "USD" });
 
-    // Housing-to-Income Ratio: Green < 0.28, Orange 0.28-0.36, Red > 0.36
-    let ratioColor = housingToIncomeRatio < 0.28 ? "green" : housingToIncomeRatio <= 0.36 ? "orange" : "red";
+    // Update results on the page with conditional formatting
+    updateResult("grossIncome", `Gross Monthly Income: ${formatCurrency(grossMonthlyIncome)}`);
+    updateResult("netIncome", `Net Monthly Income: ${formatCurrency(netMonthlyIncome)}`);
+    updateResult("emergencyFund", `Emergency Fund Needed: ${formatCurrency(emergencyFundNeeded)}`);
+    updateResult("downPaymentResult", `Down Payment: ${formatCurrency(downPayment)}`, downPayment > savings ? "red" : "green");
+    updateResult("closingCosts", `Closing Costs: ${formatCurrency(closingCosts)}`);
+    updateResult("cashLeftOver", `Cash Left Over: ${formatCurrency(cashLeftOver)}`, cashLeftOver < 0 ? "red" : "green");
+    updateResult("monthlyMortgagePayment", `Monthly Mortgage Payment: ${formatCurrency(monthlyMortgagePayment)}`);
+    updateResult("monthlyPropertyTax", `Monthly Property Tax: ${formatCurrency(monthlyPropertyTax)}`);
+    updateResult("monthlyHomeInsurance", `Monthly Home Insurance: ${formatCurrency(monthlyHomeInsurance)}`);
+    updateResult("totalMonthlyHousingExpenses", `Total Monthly Housing Expenses: ${formatCurrency(totalMonthlyHousingExpenses)}`);
+
+    // Housing-to-Income Ratio: Green <= 0.28, Orange 0.29-0.36, Red > 0.36
+    let ratioColor = housingToIncomeRatio <= 0.28 ? "green" : housingToIncomeRatio <= 0.36 ? "orange" : "red";
     updateResult("housingToIncomeRatio", `Housing-to-Income Ratio: ${housingToIncomeRatio.toFixed(2)}`, ratioColor);
 
-    updateResult("totalMonthlyExpenses", `Total Monthly Expenses: $${totalMonthlyExpenses.toFixed(2)}`);
+    updateResult("totalMonthlyExpenses", `Total Monthly Expenses: ${formatCurrency(totalMonthlyExpenses)}`);
 
-    // Monthly Surplus: Red < 2000, Orange 2000-3000, Green > 3000
-    let surplusColor = monthlySurplus < 2000 ? "red" : monthlySurplus <= 3000 ? "orange" : "green";
-    updateResult("monthlySurplus", `Monthly Surplus: $${monthlySurplus.toFixed(2)}`, surplusColor);
+    // Monthly Surplus: Red < 2000, Orange 2000-2999, Green >= 3000
+    let surplusColor = monthlySurplus < 2000 ? "red" : monthlySurplus < 3000 ? "orange" : "green";
+    updateResult("monthlySurplus", `Monthly Surplus: ${formatCurrency(monthlySurplus)}`, surplusColor);
 }
 
 function updateResult(elementId, text, color) {
