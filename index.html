@@ -7,55 +7,57 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<h1>Mortgage Calculator</h1>
-
 <div class="calculator">
+    <h1>Mortgage Calculator</h1>
+
     <label for="earnedIncome">Gross Annual Earned Income:</label>
-    <input type="text" id="earnedIncome" placeholder="Enter earned income">
+    <input type="text" id="earnedIncome">
 
     <label for="vaIncome1">Monthly VA Income 1:</label>
-    <input type="text" id="vaIncome1" placeholder="Enter VA income 1">
+    <input type="text" id="vaIncome1">
 
     <label for="vaIncome2">Monthly VA Income 2:</label>
-    <input type="text" id="vaIncome2" placeholder="Enter VA income 2">
+    <input type="text" id="vaIncome2">
 
     <label for="otherExpenses">Other Monthly Expenses:</label>
-    <input type="text" id="otherExpenses" placeholder="Enter other expenses">
+    <input type="text" id="otherExpenses">
 
-    <label for="savingsAmount">Amount in Savings:</label>
-    <input type="text" id="savingsAmount" placeholder="Enter savings amount">
+    <label for="savings">Amount in Savings:</label>
+    <input type="text" id="savings">
 
     <label for="homePrice">Home Price:</label>
-    <input type="text" id="homePrice" placeholder="Enter home price">
+    <input type="text" id="homePrice">
 
     <label for="downPayment">Down Payment:</label>
-    <input type="text" id="downPayment" placeholder="Enter down payment">
-    <input type="radio" id="downPaymentPercentage" name="downPaymentType" value="percentage" checked>
-    <label for="downPaymentPercentage">%</label>
-    <input type="radio" id="downPaymentDollar" name="downPaymentType" value="dollar">
-    <label for="downPaymentDollar">$</label>
+    <input type="text" id="downPayment">
+    <input type="radio" id="downPaymentPercentage" name="downPaymentType" value="percentage" checked> %
+    <input type="radio" id="downPaymentDollar" name="downPaymentType" value="dollar"> $
 
     <label for="interestRate">Interest Rate (%):</label>
-    <input type="text" id="interestRate" placeholder="Enter interest rate">
+    <input type="text" id="interestRate">
 
     <label for="loanTerm">Loan Term (years):</label>
-    <input type="text" id="loanTerm" placeholder="Enter loan term">
+    <input type="text" id="loanTerm">
 
-    <button id="calculateButton">Calculate</button>
+    <button onclick="calculate()">Calculate</button>
 </div>
 
 <div class="results">
-    <p id="monthlyMortgagePaymentResult">Monthly Mortgage Payment:</p>
-    <p id="monthlyPropertyTaxResult">Monthly Property Tax:</p>
-    <p id="monthlyHomeInsuranceResult">Monthly Home Insurance:</p>
-    <p id="totalMonthlyHousingExpensesResult">Total Monthly Housing Expenses:</p>
-    <p id="totalMonthlyExpensesResult">Total Monthly Expenses:</p>
-    <p id="emergencyFundResult">Emergency Fund:</p>
-    <p id="cashLeftOverResult">Cash Left Over:</p>
-    <p id="grossMonthlyIncomeResult">Gross Monthly Income:</p>
-    <p id="netMonthlyIncomeResult">Net Monthly Income:</p>
+    <p id="grossIncome">Gross Monthly Income: $</p>
+    <p id="netIncome">Net Monthly Income: $</p>
+    <p id="emergencyFund">Emergency Fund Needed: $</p>
+    <p id="downPaymentResult">Down Payment: $</p>
+    <p id="closingCosts">Closing Costs: $</p>
+    <p id="cashLeftOver">Cash Left Over: $</p>
+    <p id="monthlyMortgagePayment">Monthly Mortgage Payment: $</p>
+    <p id="monthlyPropertyTax">Monthly Property Tax: $</p>
+    <p id="monthlyHomeInsurance">Monthly Home Insurance: $</p>
+    <p id="totalMonthlyHousingExpenses">Total Monthly Housing Expenses: $</p>
+    <p id="housingToIncomeRatio">Housing-to-Income Ratio: </p>
+    <p id="totalMonthlyExpenses">Total Monthly Expenses: $</p>
+    <p id="monthlySurplus">Monthly Surplus: $</p>
 </div>
 
-<script src="calculator.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

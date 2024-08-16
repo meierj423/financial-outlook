@@ -1,102 +1,71 @@
-document.getElementById("calculateButton").addEventListener("click", function() {
-    const earnedIncome = parseFloat(document.getElementById("earnedIncome").value);
-    const vaIncome1 = parseFloat(document.getElementById("vaIncome1").value);
-    const vaIncome2 = parseFloat(document.getElementById("vaIncome2").value);
-    const otherExpenses = parseFloat(document.getElementById("otherExpenses").value);
-    const savingsAmount = parseFloat(document.getElementById("savingsAmount").value);
-    const homePrice = parseFloat(document.getElementById("homePrice").value);
+function calculate() {
+    const earnedIncome = parseFloat(document.getElementById("earnedIncome").value) || 0;
+    const vaIncome1 = parseFloat(document.getElementById("vaIncome1").value) || 0;
+    const vaIncome2 = parseFloat(document.getElementById("vaIncome2").value) || 0;
+    const otherExpenses = parseFloat(document.getElementById("otherExpenses").value) || 0;
+    const savings = parseFloat(document.getElementById("savings").value) || 0;
+    const homePrice = parseFloat(document.getElementById("homePrice").value) || 0;
     const downPaymentText = document.getElementById("downPayment").value;
+    const interestRate = parseFloat(document.getElementById("interestRate").value) / 100 || 0;
+    const loanTermYears = parseInt(document.getElementById("loanTerm").value) || 0;
+
     const isPercentage = document.getElementById("downPaymentPercentage").checked;
-    const interestRate = parseFloat(document.getElementById("interestRate").value);
-    const loanTerm = parseInt(document.getElementById("loanTerm").value);
 
-    // Calculation logic
-    const downPayment = calculateDownPayment(homePrice, downPaymentText, isPercentage);
-    const monthlyMortgagePayment = calculateMonthlyMortgagePayment(homePrice, downPayment, interestRate, loanTerm);
-    const monthlyPropertyTax = calculateMonthlyPropertyTax(homePrice);
-    const monthlyHomeInsurance = calculateMonthlyHomeInsurance(homePrice);
-    const totalMonthlyHousingExpenses = monthlyMortgagePayment + monthlyPropertyTax + monthlyHomeInsurance;
-    const totalMonthlyExpenses = calculateTotalMonthlyExpenses(totalMonthlyHousingExpenses, otherExpenses);
-    const emergencyFund = calculateEmergencyFund(totalMonthlyExpenses, vaIncome1, vaIncome2);
-    const cashLeftOver = savingsAmount - emergencyFund - downPayment;
-    const grossMonthlyIncome = calculateGrossMonthlyIncome(earnedIncome, vaIncome1, vaIncome2, cashLeftOver);
-    const netMonthlyIncome = calculateNetMonthlyIncome(earnedIncome, vaIncome1, vaIncome2, cashLeftOver);
+    // Calculate Down Payment
+    const downPayment = isPercentage ? (parseFloat(downPaymentText.replace("%", "").trim()) / 100) * homePrice
+        : parseFloat(downPaymentText.replace("$", "").trim());
 
-    // Update the results on the page
-    updateResult("monthlyMortgagePaymentResult", monthlyMortgagePayment);
-    updateResult("monthlyPropertyTaxResult", monthlyPropertyTax);
-    updateResult("monthlyHomeInsuranceResult", monthlyHomeInsurance);
-    updateResult("totalMonthlyHousingExpensesResult", totalMonthlyHousingExpenses);
-    updateResult("totalMonthlyExpensesResult", totalMonthlyExpenses, netMonthlyIncome);
-    updateResult("emergencyFundResult", emergencyFund);
-    updateResult("cashLeftOverResult", cashLeftOver);
-    updateResult("grossMonthlyIncomeResult", grossMonthlyIncome);
-    updateResult("netMonthlyIncomeResult", netMonthlyIncome);
-});
-
-function calculateDownPayment(homePrice, downPaymentText, isPercentage) {
-    if (isPercentage) {
-        return (parseFloat(downPaymentText.replace("%", "").trim()) / 100) * homePrice;
-    } else {
-        return parseFloat(downPaymentText.replace("$", "").trim());
-    }
-}
-
-function calculateMonthlyMortgagePayment(homePrice, downPayment, annualInterestRate, loanTermYears) {
+    // Calculate Loan Amount
     const loanAmount = homePrice - downPayment;
+
+    // Calculate Closing Costs (3% of the loan amount)
+    const closingCosts = loanAmount * 0.03;
+
+    // Calculate Monthly Mortgage Payment
     const loanTermMonths = loanTermYears * 12;
-    const monthlyInterestRate = annualInterestRate / 12;
-    return loanAmount * (monthlyInterestRate * Math.pow(1 + monthlyInterestRate, loanTermMonths))
+    const monthlyInterestRate = interestRate / 12;
+    const monthlyMortgagePayment = loanAmount * (monthlyInterestRate * Math.pow(1 + monthlyInterestRate, loanTermMonths))
         / (Math.pow(1 + monthlyInterestRate, loanTermMonths) - 1);
-}
 
-function calculateMonthlyPropertyTax(homePrice) {
-    const propertyTaxRate = 0.94 / 100;
-    return (homePrice * propertyTaxRate) / 12;
-}
+    // Calculate Monthly Property Tax and Home Insurance
+    const monthlyPropertyTax = (homePrice * (0.94 / 100)) / 12;
+    const monthlyHomeInsurance = (homePrice * (0.33 / 100)) / 12;
 
-function calculateMonthlyHomeInsurance(homePrice) {
-    const annualHomeInsuranceRate = 0.33 / 100;
-    return (homePrice * annualHomeInsuranceRate) / 12;
-}
+    // Calculate Total Monthly Housing Expenses
+    const totalMonthlyHousingExpenses = monthlyMortgagePayment + monthlyPropertyTax + monthlyHomeInsurance;
 
-function calculateTotalMonthlyExpenses(monthlyHousingExpenses, otherMonthlyExpenses) {
-    return monthlyHousingExpenses + otherMonthlyExpenses;
-}
+    // Calculate Emergency Fund Needed
+    const totalMonthlyExpenses = totalMonthlyHousingExpenses + otherExpenses;
+    const emergencyFundNeeded = (totalMonthlyExpenses - vaIncome1 - vaIncome2) * 6;
 
-function calculateEmergencyFund(totalMonthlyExpenses, vaIncome1, vaIncome2) {
-    return (totalMonthlyExpenses - vaIncome1 - vaIncome2) * 6;
-}
+    // Calculate Cash Left Over
+    const cashLeftOver = savings - downPayment - emergencyFundNeeded - closingCosts;
 
-function calculateGrossMonthlyIncome(earnedAnnualIncome, vaIncomeField1, vaIncomeField2, cashLeftOver) {
-    if (cashLeftOver < 0) {
-        cashLeftOver = 0;
-    }
-    const hysaInterestPayment = (cashLeftOver * (4.6 / 100)) / 12;
-    return (earnedAnnualIncome / 12) + vaIncomeField1 + vaIncomeField2 + hysaInterestPayment;
-}
+    // Calculate Gross Monthly Income
+    const hysaInterestPayment = (cashLeftOver > 0 ? (cashLeftOver * (4.6 / 100)) / 12 : 0);
+    const grossMonthlyIncome = (earnedIncome / 12) + vaIncome1 + vaIncome2 + hysaInterestPayment;
 
-function calculateNetMonthlyIncome(earnedAnnualIncome, vaIncomeField1, vaIncomeField2, cashLeftOver) {
-    if (cashLeftOver < 0) {
-        cashLeftOver = 0;
-    }
-    const hysaInterestPayment = (cashLeftOver * (4.6 / 100)) / 12;
-    return ((earnedAnnualIncome * 0.67313) / 12) + vaIncomeField1 + vaIncomeField2 + hysaInterestPayment;
-}
+    // Calculate Net Monthly Income
+    const netMonthlyIncome = ((earnedIncome * 0.67313) / 12) + vaIncome1 + vaIncome2 + hysaInterestPayment;
 
-function updateResult(elementId, value, netMonthlyIncome = null) {
-    const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-    const element = document.getElementById(elementId);
+    // Calculate Housing-to-Income Ratio
+    const housingToIncomeRatio = totalMonthlyHousingExpenses / grossMonthlyIncome;
 
-    element.textContent = `${element.textContent.split(':')[0]}: ${formatter.format(value)}`;
+    // Calculate Monthly Surplus
+    const monthlySurplus = netMonthlyIncome - totalMonthlyExpenses;
 
-    if (netMonthlyIncome !== null && elementId === "totalMonthlyExpensesResult") {
-        element.style.color = value > netMonthlyIncome ? "red" : "green";
-    } else if (elementId === "cashLeftOverResult") {
-        element.style.color = value < 0 ? "red" : "green";
-    } else if (elementId === "totalMonthlyExpensesResult" && value > netMonthlyIncome) {
-        element.style.color = "red";
-    } else {
-        element.style.color = "black";
-    }
+    // Update results on the page
+    document.getElementById("grossIncome").innerHTML = `Gross Monthly Income: $${grossMonthlyIncome.toFixed(2)}`;
+    document.getElementById("netIncome").innerHTML = `Net Monthly Income: $${netMonthlyIncome.toFixed(2)}`;
+    document.getElementById("emergencyFund").innerHTML = `Emergency Fund Needed: $${emergencyFundNeeded.toFixed(2)}`;
+    document.getElementById("downPaymentResult").innerHTML = `Down Payment: $${downPayment.toFixed(2)}`;
+    document.getElementById("closingCosts").innerHTML = `Closing Costs: $${closingCosts.toFixed(2)}`;
+    document.getElementById("cashLeftOver").innerHTML = `Cash Left Over: $${cashLeftOver.toFixed(2)}`;
+    document.getElementById("monthlyMortgagePayment").innerHTML = `Monthly Mortgage Payment: $${monthlyMortgagePayment.toFixed(2)}`;
+    document.getElementById("monthlyPropertyTax").innerHTML = `Monthly Property Tax: $${monthlyPropertyTax.toFixed(2)}`;
+    document.getElementById("monthlyHomeInsurance").innerHTML = `Monthly Home Insurance: $${monthlyHomeInsurance.toFixed(2)}`;
+    document.getElementById("totalMonthlyHousingExpenses").innerHTML = `Total Monthly Housing Expenses: $${totalMonthlyHousingExpenses.toFixed(2)}`;
+    document.getElementById("housingToIncomeRatio").innerHTML = `Housing-to-Income Ratio: ${housingToIncomeRatio.toFixed(2)}`;
+    document.getElementById("totalMonthlyExpenses").innerHTML = `Total Monthly Expenses: $${totalMonthlyExpenses.toFixed(2)}`;
+    document.getElementById("monthlySurplus").innerHTML = `Monthly Surplus: $${monthlySurplus.toFixed(2)}`;
 }
