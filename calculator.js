@@ -1,5 +1,5 @@
 function calculate() {
-    const earnedIncome = parseFloat(document.getElementById("earnedIncome").value) || 0;
+    const earnedIncome = parseFloat(document.getElementById("grossAnnualIncome").value) || 0;
     const vaIncome1 = parseFloat(document.getElementById("vaIncome1").value) || 0;
     const vaIncome2 = parseFloat(document.getElementById("vaIncome2").value) || 0;
     const otherExpenses = parseFloat(document.getElementById("otherExpenses").value) || 0;
@@ -9,7 +9,7 @@ function calculate() {
     const interestRate = parseFloat(document.getElementById("interestRate").value) / 100 || 0;
     const loanTermYears = parseInt(document.getElementById("loanTerm").value) || 0;
 
-    const isPercentage = document.getElementById("downPaymentPercentage").checked;
+    const isPercentage = document.getElementById("downPayment").checked;
 
     // Calculate Down Payment
     const downPayment = isPercentage ? (parseFloat(downPaymentText.replace("%", "").trim()) / 100) * homePrice
