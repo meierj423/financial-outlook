@@ -9,7 +9,7 @@ function calculate() {
     const interestRate = parseFloat(document.getElementById("interestRate").value) / 100 || 0;
     const loanTermYears = parseInt(document.getElementById("loanTerm").value) || 0;
 
-    const isPercentage = document.getElementById("downPayment").checked;
+    const isPercentage = document.querySelector('input[name="dpType"]:checked').value === "percentage";
 
     // Calculate Down Payment
     const downPayment = isPercentage ? (parseFloat(downPaymentText.replace("%", "").trim()) / 100) * homePrice
@@ -54,18 +54,36 @@ function calculate() {
     // Calculate Monthly Surplus
     const monthlySurplus = netMonthlyIncome - totalMonthlyExpenses;
 
-    // Update results on the page
-    document.getElementById("grossIncome").innerHTML = `Gross Monthly Income: $${grossMonthlyIncome.toFixed(2)}`;
-    document.getElementById("netIncome").innerHTML = `Net Monthly Income: $${netMonthlyIncome.toFixed(2)}`;
-    document.getElementById("emergencyFund").innerHTML = `Emergency Fund Needed: $${emergencyFundNeeded.toFixed(2)}`;
-    document.getElementById("downPaymentResult").innerHTML = `Down Payment: $${downPayment.toFixed(2)}`;
-    document.getElementById("closingCosts").innerHTML = `Closing Costs: $${closingCosts.toFixed(2)}`;
-    document.getElementById("cashLeftOver").innerHTML = `Cash Left Over: $${cashLeftOver.toFixed(2)}`;
-    document.getElementById("monthlyMortgagePayment").innerHTML = `Monthly Mortgage Payment: $${monthlyMortgagePayment.toFixed(2)}`;
-    document.getElementById("monthlyPropertyTax").innerHTML = `Monthly Property Tax: $${monthlyPropertyTax.toFixed(2)}`;
-    document.getElementById("monthlyHomeInsurance").innerHTML = `Monthly Home Insurance: $${monthlyHomeInsurance.toFixed(2)}`;
-    document.getElementById("totalMonthlyHousingExpenses").innerHTML = `Total Monthly Housing Expenses: $${totalMonthlyHousingExpenses.toFixed(2)}`;
-    document.getElementById("housingToIncomeRatio").innerHTML = `Housing-to-Income Ratio: ${housingToIncomeRatio.toFixed(2)}`;
-    document.getElementById("totalMonthlyExpenses").innerHTML = `Total Monthly Expenses: $${totalMonthlyExpenses.toFixed(2)}`;
-    document.getElementById("monthlySurplus").innerHTML = `Monthly Surplus: $${monthlySurplus.toFixed(2)}`;
+    // Update results on the page with conditional formatting
+    updateResult("grossIncome", `Gross Monthly Income: $${grossMonthlyIncome.toFixed(2)}`);
+    updateResult("netIncome", `Net Monthly Income: $${netMonthlyIncome.toFixed(2)}`);
+    updateResult("emergencyFund", `Emergency Fund Needed: $${emergencyFundNeeded.toFixed(2)}`);
+    updateResult("downPaymentResult", `Down Payment: $${downPayment.toFixed(2)}`, downPayment > savings ? "red" : "green");
+    updateResult("closingCosts", `Closing Costs: $${closingCosts.toFixed(2)}`);
+    updateResult("cashLeftOver", `Cash Left Over: $${cashLeftOver.toFixed(2)}`, cashLeftOver < 0 ? "red" : "green");
+    updateResult("monthlyMortgagePayment", `Monthly Mortgage Payment: $${monthlyMortgagePayment.toFixed(2)}`);
+    updateResult("monthlyPropertyTax", `Monthly Property Tax: $${monthlyPropertyTax.toFixed(2)}`);
+    updateResult("monthlyHomeInsurance", `Monthly Home Insurance: $${monthlyHomeInsurance.toFixed(2)}`);
+    updateResult("totalMonthlyHousingExpenses", `Total Monthly Housing Expenses: $${totalMonthlyHousingExpenses.toFixed(2)}`);
+
+    // Housing-to-Income Ratio: Green < 0.28, Orange 0.28-0.36, Red > 0.36
+    let ratioColor = housingToIncomeRatio < 0.28 ? "green" : housingToIncomeRatio <= 0.36 ? "orange" : "red";
+    updateResult("housingToIncomeRatio", `Housing-to-Income Ratio: ${housingToIncomeRatio.toFixed(2)}`, ratioColor);
+
+    updateResult("totalMonthlyExpenses", `Total Monthly Expenses: $${totalMonthlyExpenses.toFixed(2)}`);
+
+    // Monthly Surplus: Red < 2000, Orange 2000-3000, Green > 3000
+    let surplusColor = monthlySurplus < 2000 ? "red" : monthlySurplus <= 3000 ? "orange" : "green";
+    updateResult("monthlySurplus", `Monthly Surplus: $${monthlySurplus.toFixed(2)}`, surplusColor);
 }
+
+function updateResult(elementId, text, color) {
+    const element = document.getElementById(elementId);
+    element.innerHTML = text;
+    if (color) {
+        element.style.color = color;
+    }
+}
+
+// Attach event listener
+document.getElementById("calculateBtn").addEventListener("click", calculate);
