@@ -8,8 +8,6 @@ function calculate() {
     const downPaymentText = document.getElementById("downPayment").value;
     const interestRate = parseFloat(document.getElementById("interestRate").value) / 100 || 0;
     const loanTermYears = parseInt(document.getElementById("loanTerm").value) || 0;
-    const loanBeginDate = new Date(document.getElementById("loanBeginDate").value);
-    const loanEndDate = new Date(document.getElementById("loanEndDate").value);
 
     const isPercentage = document.querySelector('input[name="dpType"]:checked').value === "percentage";
 
@@ -56,10 +54,6 @@ function calculate() {
     // Calculate Monthly Surplus
     const monthlySurplus = netMonthlyIncome - totalMonthlyExpenses;
 
-    // Calculate Additional Monthly Payment Needed
-    const remainingMonths = (loanEndDate.getFullYear() - loanBeginDate.getFullYear()) * 12 + (loanEndDate.getMonth() - loanBeginDate.getMonth());
-    const additionalMonthlyPaymentNeeded = remainingMonths > 0 ? (loanAmount / remainingMonths) : 0;
-
     // Format numbers with commas
     const formatCurrency = (value) => value.toLocaleString("en-US", { style: "currency", currency: "USD" });
 
@@ -84,44 +78,15 @@ function calculate() {
     // Monthly Surplus: Red < 2000, Orange 2000-2999, Green >= 3000
     let surplusColor = monthlySurplus < 2000 ? "red" : monthlySurplus < 3000 ? "orange" : "green";
     updateResult("monthlySurplus", `Monthly Surplus: ${formatCurrency(monthlySurplus)}`, surplusColor);
-
-    // Conditional formatting for the Additional Monthly Payment Needed field
-    const additionalPaymentElement = document.getElementById("additionalMonthlyPaymentNeeded");
-    additionalPaymentElement.textContent = `Additional Monthly Payment Needed: ${formatCurrency(additionalMonthlyPaymentNeeded)}`;
-    additionalPaymentElement.style.color = additionalMonthlyPaymentNeeded > monthlySurplus ? "red" : "green";
 }
 
-// Function to update result text
-function updateResult(elementId, text) {
-    document.getElementById(elementId).textContent = text;
+function updateResult(elementId, text, color) {
+    const element = document.getElementById(elementId);
+    element.innerHTML = text;
+    if (color) {
+        element.style.color = color;
+    }
 }
 
-// Function to synchronize slider and input values
-function synchronizeSlider(inputId, sliderId) {
-    const input = document.getElementById(inputId);
-    const slider = document.getElementById(sliderId);
-
-    input.addEventListener("input", () => slider.value = input.value);
-    slider.addEventListener("input", () => input.value = slider.value);
-
-    input.dispatchEvent(new Event("input")); // Initialize the synchronization
-}
-
-// Attach event listeners to all input fields for dynamic calculation
-document.querySelectorAll("input").forEach(input => {
-    input.addEventListener("input", calculate);
-});
-
-// Synchronize sliders with input fields
-synchronizeSlider("grossAnnualIncome", "grossAnnualIncomeSlider");
-synchronizeSlider("vaIncome1", "vaIncome1Slider");
-synchronizeSlider("vaIncome2", "vaIncome2Slider");
-synchronizeSlider("otherExpenses", "otherExpensesSlider");
-synchronizeSlider("savings", "savingsSlider");
-synchronizeSlider("homePrice", "homePriceSlider");
-synchronizeSlider("downPayment", "downPaymentSlider");
-synchronizeSlider("interestRate", "interestRateSlider");
-synchronizeSlider("loanTerm", "loanTermSlider");
-
-// Initial calculation to populate the results when the page loads
-calculate();
+// Attach event listener
+document.getElementById("calculateBtn").addEventListener("click", calculate);
