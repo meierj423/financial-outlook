@@ -88,5 +88,11 @@ function updateResult(elementId, text, color) {
     }
 }
 
-// Attach event listener
-document.getElementById("calculateBtn").addEventListener("click", calculate);
+// Attach event listeners to all inputs
+document.querySelectorAll('#mortgage-form input').forEach(input => {
+    input.addEventListener('input', calculate);
+});
+
+document.querySelectorAll('input[name="dpType"]').forEach(radio => {
+    radio.addEventListener('change', calculate);
+});
