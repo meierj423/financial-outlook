@@ -4,7 +4,7 @@ function getUrlParams() {
     return {
         loanAmount: parseFloat(params.get('loanAmount')) || 0,
         interestRate: parseFloat(params.get('interestRate')) || 0,
-        loanTerm: parseInt(params.get('loanTerm')) || 0
+        loanTerm: parseInt(params.get('loanTermMonths')) || 0 // Changed to loanTermMonths
     };
 }
 
@@ -18,7 +18,7 @@ function calculateAmortization() {
     const additionalYearlyPayment = parseFloat(document.getElementById("additionalYearlyPayment").value) || 0;
 
     // Calculate total number of months
-    const totalMonths = (loanTerm * 12);
+    const totalMonths = loanTerm;
     const monthlyInterestRate = interestRate / 100 / 12;
     let balance = loanAmount;
     let totalInterestPaid = 0;
@@ -143,6 +143,9 @@ document.querySelectorAll('#loanBeginDate, #loanEndDate, #additionalMonthlyPayme
 
 // Initial calculation when the page loads
 window.addEventListener('load', calculateAmortization);
+
+// Optional: If you have an "Amortize" button, add an event listener
+document.getElementById("amortizeBtn").addEventListener("click", calculateAmortization);
 
 document.getElementById("backBtn").addEventListener("click", function() {
     // Redirect to the initial page (index.html)
