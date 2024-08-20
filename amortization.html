@@ -14,7 +14,7 @@
 
     <form id="amortization-form">
         <label for="loanBeginDate">Loan Begin Date:</label>
-        <input type="date" id="loanBeginDate" required>
+        <input type="date" id="loanBeginDate" required value="<?php echo date('Y-m-d'); ?>">
 
         <label for="additionalMonthlyPayment">Additional Monthly Payment:</label>
         <input type="number" id="additionalMonthlyPayment" required>
@@ -29,7 +29,7 @@
         <p id="loanAmount">Loan Amount: $</p>
         <p id="totalInterestPaid">Total Interest Paid: $</p>
         <p id="totalCostOfLoan">Total Cost of Loan: $</p>
-        <p id="payoffDate">Payoff Date: </p>
+        <p id="payoffDate">Pay-Off Date: </p>
     </div>
 
     <canvas id="amortizationChart" width="400" height="200"></canvas>

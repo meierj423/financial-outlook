@@ -18,7 +18,7 @@ function calculateAmortization() {
     const { loanAmount, interestRate, loanTermMonths } = getUrlParams();
 
     // Get input values for amortization calculations
-    const loanBeginDate = new Date(document.getElementById("loanBeginDate").value);
+    const loanBeginDate = new Date(document.getElementById("loanBeginDate").value || new Date().toISOString().split('T')[0]);
     const additionalMonthlyPayment = parseFloat(document.getElementById("additionalMonthlyPayment").value) || 0;
     const additionalYearlyPayment = parseFloat(document.getElementById("additionalYearlyPayment").value) || 0;
 
@@ -132,7 +132,7 @@ function renderAmortizationChart(payments) {
                 tooltip: {
                     callbacks: {
                         label: function(tooltipItem) {
-                            return formatCurrency(tooltipItem.raw);
+                            return `$${tooltipItem.formattedValue}`;
                         }
                     }
                 }
