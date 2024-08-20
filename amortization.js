@@ -9,8 +9,14 @@ function getUrlParams() {
 }
 
 // Function to calculate amortization
+// Function to format currency with commas
+function formatCurrency(value) {
+    return value.toLocaleString("en-US", { style: "currency", currency: "USD" });
+}
+
+// Function to calculate amortization
 function calculateAmortization() {
-    const { loanAmount, interestRate, loanTermMonths } = getUrlParams();
+    const { loanAmount, interestRate, loanTerm } = getUrlParams();
 
     // Get input values for amortization calculations
     const loanBeginDate = new Date(document.getElementById("loanBeginDate").value);
@@ -18,7 +24,7 @@ function calculateAmortization() {
     const additionalYearlyPayment = parseFloat(document.getElementById("additionalYearlyPayment").value) || 0;
 
     // Calculate total number of months
-    const totalMonths = loanTermMonths;
+    const totalMonths = loanTerm;
     const monthlyInterestRate = interestRate / 100 / 12;
     let balance = loanAmount;
     let totalInterestPaid = 0;
@@ -29,7 +35,7 @@ function calculateAmortization() {
     // Amortization calculations
     for (let month = 1; month <= totalMonths; month++) {
         const interestPayment = balance * monthlyInterestRate;
-        const principalPayment = (loanAmount * (monthlyInterestRate * Math.pow(1 + monthlyInterestRate, totalMonths))) /
+        const principalPayment = (balance * (monthlyInterestRate * Math.pow(1 + monthlyInterestRate, totalMonths))) /
             (Math.pow(1 + monthlyInterestRate, totalMonths) - 1) - interestPayment;
 
         balance -= (principalPayment + additionalMonthlyPayment);
@@ -59,10 +65,10 @@ function calculateAmortization() {
     }
 
     // Update results
-    document.getElementById("loanAmountResult").textContent = `Loan Amount: $${loanAmount.toFixed(2)}`;
-    document.getElementById("totalInterestPaid").textContent = `Total Interest Paid: $${totalInterestPaid.toFixed(2)}`;
-    document.getElementById("totalCostOfLoan").textContent = `Total Cost of Loan: $${totalCostOfLoan.toFixed(2)}`;
-    document.getElementById("payoffDate").textContent = `Payoff Date: ${payoffDate ? payoffDate.toLocaleDateString() : "N/A"}`;
+    document.getElementById("loanAmount").textContent = `Loan Amount: ${formatCurrency(loanAmount)}`;
+    document.getElementById("totalInterestPaid").textContent = `Total Interest Paid: ${formatCurrency(totalInterestPaid)}`;
+    document.getElementById("totalCostOfLoan").textContent = `Total Cost of Loan: ${formatCurrency(totalCostOfLoan)}`;
+    document.getElementById("payoffDate").textContent = `Pay-Off Date: ${payoffDate ? payoffDate.toLocaleDateString() : "N/A"}`;
 
     // Render amortization chart
     renderAmortizationChart(payments);
