@@ -143,7 +143,7 @@ function renderAmortizationChart(payments) {
 }
 
 // Attach event listener to calculate amortization when inputs change
-document.querySelectorAll('#loanBeginDate, #additionalMonthlyPayment, #additionalYearlyPayment').forEach(input => {
+document.querySelectorAll('#loanBeginDate, #loanEndDate, #additionalMonthlyPayment, #additionalYearlyPayment').forEach(input => {
     input.addEventListener('input', calculateAmortization);
 });
 
