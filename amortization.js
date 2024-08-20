@@ -7,6 +7,7 @@ function getUrlParams() {
         loanTermMonths: parseInt(params.get('loanTermMonths')) || 0
     };
 }
+
 // Function to format currency with commas
 function formatCurrency(value) {
     return value.toLocaleString("en-US", { style: "currency", currency: "USD" });
@@ -131,7 +132,7 @@ function renderAmortizationChart(payments) {
                 tooltip: {
                     callbacks: {
                         label: function(tooltipItem) {
-                            return `$${tooltipItem.formattedValue}`;
+                            return formatCurrency(tooltipItem.raw);
                         }
                     }
                 }

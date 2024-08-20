@@ -29,7 +29,7 @@ label {
     margin: 10px 0 5px;
 }
 
-input[type="number"] {
+input[type="number"], input[type="date"] {
     padding: 10px;
     font-size: 16px;
     border-radius: 4px;
@@ -60,26 +60,14 @@ button:hover {
     background-color: #0056b3;
 }
 
-#results {
+#amortization-results {
     margin-top: 20px;
 }
 
-@media (max-width: 600px) {
-    .container {
-        width: 90%;
-        margin: 20px auto;
-        padding: 15px;
-    }
-
-    input[type="number"] {
-        padding: 8px;
-        font-size: 14px;
-    }
-
-    button {
-        padding: 8px;
-        font-size: 14px;
-    }
+#amortizationChart {
+    margin-top: 20px;
+    width: 100% !important;
+    height: auto !important;
 }
 
 @media (max-width: 600px) {
@@ -97,10 +85,5 @@ button:hover {
     button {
         padding: 8px;
         font-size: 14px;
-    }
-
-    #amortizationChart {
-        width: 100% !important;
-        height: auto !important;
     }
 }
