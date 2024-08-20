@@ -81,3 +81,26 @@ button:hover {
         font-size: 14px;
     }
 }
+
+@media (max-width: 600px) {
+    .container {
+        width: 90%;
+        margin: 20px auto;
+        padding: 15px;
+    }
+
+    input[type="number"], input[type="date"] {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    button {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    #amortizationChart {
+        width: 100% !important;
+        height: auto !important;
+    }
+}

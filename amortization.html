@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Amortization</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>Loan Amortization</h1>
+
+    <button id="backBtn">Back to Calculator</button>
+
+    <form id="amortization-form">
+        <label for="loanBeginDate">Loan Begin Date:</label>
+        <input type="date" id="loanBeginDate" required>
+
+        <label for="loanEndDate">Loan End Date:</label>
+        <input type="date" id="loanEndDate" required>
+
+        <label for="additionalMonthlyPayment">Additional Monthly Payment:</label>
+        <input type="number" id="additionalMonthlyPayment" required>
+
+        <label for="additionalYearlyPayment">Additional Yearly Payment:</label>
+        <input type="number" id="additionalYearlyPayment" required>
+
+        <button type="button" id="amortizeBtn">Amortize</button>
+    </form>
+
+    <div id="amortization-results">
+        <p id="loanAmount">Loan Amount: $</p>
+        <p id="totalInterestPaid">Total Interest Paid: $</p>
+        <p id="totalCostOfLoan">Total Cost of Loan: $</p>
+        <p id="payoffDate">Payoff Date: </p>
+    </div>
+
+    <canvas id="amortizationChart" width="400" height="200"></canvas>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="amortization.js"></script>
+</body>
+</html>
