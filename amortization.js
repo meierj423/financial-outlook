@@ -4,13 +4,13 @@ function getUrlParams() {
     return {
         loanAmount: parseFloat(params.get('loanAmount')) || 0,
         interestRate: parseFloat(params.get('interestRate')) || 0,
-        loanTerm: parseInt(params.get('loanTermMonths')) || 0 // Changed to loanTermMonths
+        loanTermMonths: parseInt(params.get('loanTermMonths')) || 0
     };
 }
 
 // Function to calculate amortization
 function calculateAmortization() {
-    const { loanAmount, interestRate, loanTerm } = getUrlParams();
+    const { loanAmount, interestRate, loanTermMonths } = getUrlParams();
 
     // Get input values for amortization calculations
     const loanBeginDate = new Date(document.getElementById("loanBeginDate").value);
@@ -18,7 +18,7 @@ function calculateAmortization() {
     const additionalYearlyPayment = parseFloat(document.getElementById("additionalYearlyPayment").value) || 0;
 
     // Calculate total number of months
-    const totalMonths = loanTerm;
+    const totalMonths = loanTermMonths;
     const monthlyInterestRate = interestRate / 100 / 12;
     let balance = loanAmount;
     let totalInterestPaid = 0;
@@ -29,7 +29,7 @@ function calculateAmortization() {
     // Amortization calculations
     for (let month = 1; month <= totalMonths; month++) {
         const interestPayment = balance * monthlyInterestRate;
-        const principalPayment = (balance * (monthlyInterestRate * Math.pow(1 + monthlyInterestRate, totalMonths))) /
+        const principalPayment = (loanAmount * (monthlyInterestRate * Math.pow(1 + monthlyInterestRate, totalMonths))) /
             (Math.pow(1 + monthlyInterestRate, totalMonths) - 1) - interestPayment;
 
         balance -= (principalPayment + additionalMonthlyPayment);
@@ -62,7 +62,7 @@ function calculateAmortization() {
     document.getElementById("loanAmountResult").textContent = `Loan Amount: $${loanAmount.toFixed(2)}`;
     document.getElementById("totalInterestPaid").textContent = `Total Interest Paid: $${totalInterestPaid.toFixed(2)}`;
     document.getElementById("totalCostOfLoan").textContent = `Total Cost of Loan: $${totalCostOfLoan.toFixed(2)}`;
-    document.getElementById("payoffDate").textContent = `Pay-Off Date: ${payoffDate ? payoffDate.toLocaleDateString() : "N/A"}`;
+    document.getElementById("payoffDate").textContent = `Payoff Date: ${payoffDate ? payoffDate.toLocaleDateString() : "N/A"}`;
 
     // Render amortization chart
     renderAmortizationChart(payments);
@@ -108,7 +108,7 @@ function renderAmortizationChart(payments) {
                     type: 'category',
                     title: {
                         display: true,
-                        text: 'Month/Year'
+                        text: 'Month'
                     }
                 },
                 y: {
