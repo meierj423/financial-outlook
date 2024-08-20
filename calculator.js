@@ -122,3 +122,33 @@ document.getElementById("calculateBtn").addEventListener("click", function() {
 
     window.location.href = `amortization.html?${params.toString()}`;
 });
+
+// Function to save form data to localStorage
+function saveFormData() {
+    const loanAmount = document.getElementById("loanAmount").value;
+    const interestRate = document.getElementById("interestRate").value;
+    const loanTerm = document.getElementById("loanTerm").value;
+
+    localStorage.setItem('loanAmount', loanAmount);
+    localStorage.setItem('interestRate', interestRate);
+    localStorage.setItem('loanTerm', loanTerm);
+}
+
+// Event listener to save data on form change
+document.querySelectorAll('#loanAmount, #interestRate, #loanTerm').forEach(input => {
+    input.addEventListener('input', saveFormData);
+});
+
+// Function to load form data from localStorage
+function loadFormData() {
+    const loanAmount = localStorage.getItem('loanAmount');
+    const interestRate = localStorage.getItem('interestRate');
+    const loanTerm = localStorage.getItem('loanTerm');
+
+    if (loanAmount) document.getElementById("loanAmount").value = loanAmount;
+    if (interestRate) document.getElementById("interestRate").value = interestRate;
+    if (loanTerm) document.getElementById("loanTerm").value = loanTerm;
+}
+
+// Load form data when the page loads
+window.addEventListener('load', loadFormData);

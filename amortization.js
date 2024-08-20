@@ -148,6 +148,11 @@ window.addEventListener('load', calculateAmortization);
 document.getElementById("amortizeBtn").addEventListener("click", calculateAmortization);
 
 document.getElementById("backBtn").addEventListener("click", function() {
+    // Clear saved form data from localStorage
+    localStorage.removeItem('loanAmount');
+    localStorage.removeItem('interestRate');
+    localStorage.removeItem('loanTerm');
+
     // Redirect to the initial page (index.html)
     window.location.href = 'index.html';
 });
