@@ -18,24 +18,22 @@ function calculateAmortization() {
     const { loanAmount, interestRate, loanTermMonths } = getUrlParams();
 
     // Get input values for amortization calculations
-    const loanBeginDate = new Date(document.getElementById("loanBeginDate").value || new Date().toISOString().split('T')[0]);
+    const loanBeginDate = new Date(document.getElementById("loanBeginDate").value) || new Date();
     const additionalMonthlyPayment = parseFloat(document.getElementById("additionalMonthlyPayment").value) || 0;
     const additionalYearlyPayment = parseFloat(document.getElementById("additionalYearlyPayment").value) || 0;
 
-    // Calculate total number of months
-    const totalMonths = loanTermMonths;
     const monthlyInterestRate = interestRate / 100 / 12;
     let balance = loanAmount;
     let totalInterestPaid = 0;
     let totalCostOfLoan = 0;
     let payments = [];
-    let payoffDate;
+    let payoffDate = new Date(loanBeginDate);
 
     // Amortization calculations
-    for (let month = 1; month <= totalMonths; month++) {
+    for (let month = 1; month <= loanTermMonths; month++) {
         const interestPayment = balance * monthlyInterestRate;
-        const principalPayment = (loanAmount * (monthlyInterestRate * Math.pow(1 + monthlyInterestRate, totalMonths))) /
-            (Math.pow(1 + monthlyInterestRate, totalMonths) - 1) - interestPayment;
+        const principalPayment = (loanAmount * (monthlyInterestRate * Math.pow(1 + monthlyInterestRate, loanTermMonths))) /
+            (Math.pow(1 + monthlyInterestRate, loanTermMonths) - 1) - interestPayment;
 
         balance -= (principalPayment + additionalMonthlyPayment);
         totalInterestPaid += interestPayment;
@@ -57,17 +55,21 @@ function calculateAmortization() {
 
         // Check if the loan is paid off
         if (balance <= 0) {
-            payoffDate = new Date(loanBeginDate);
-            payoffDate.setMonth(payoffDate.getMonth() + month);
+            payoffDate.setMonth(loanBeginDate.getMonth() + month);
             break;
         }
+    }
+
+    // Set payoff date if loan is not paid off within the term
+    if (balance > 0) {
+        payoffDate.setMonth(loanBeginDate.getMonth() + loanTermMonths);
     }
 
     // Update results
     document.getElementById("loanAmount").textContent = `Loan Amount: ${formatCurrency(loanAmount)}`;
     document.getElementById("totalInterestPaid").textContent = `Total Interest Paid: ${formatCurrency(totalInterestPaid)}`;
     document.getElementById("totalCostOfLoan").textContent = `Total Cost of Loan: ${formatCurrency(totalCostOfLoan)}`;
-    document.getElementById("payoffDate").textContent = `Pay-Off Date: ${payoffDate ? payoffDate.toLocaleDateString() : "N/A"}`;
+    document.getElementById("payoffDate").textContent = `Pay-Off Date: ${payoffDate.toLocaleDateString()}`;
 
     // Render amortization chart
     renderAmortizationChart(payments);
