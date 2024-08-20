@@ -7,8 +7,6 @@ function getUrlParams() {
         loanTermMonths: parseInt(params.get('loanTermMonths')) || 0
     };
 }
-
-// Function to calculate amortization
 // Function to format currency with commas
 function formatCurrency(value) {
     return value.toLocaleString("en-US", { style: "currency", currency: "USD" });
@@ -16,7 +14,7 @@ function formatCurrency(value) {
 
 // Function to calculate amortization
 function calculateAmortization() {
-    const { loanAmount, interestRate, loanTerm } = getUrlParams();
+    const { loanAmount, interestRate, loanTermMonths } = getUrlParams();
 
     // Get input values for amortization calculations
     const loanBeginDate = new Date(document.getElementById("loanBeginDate").value);
@@ -24,7 +22,7 @@ function calculateAmortization() {
     const additionalYearlyPayment = parseFloat(document.getElementById("additionalYearlyPayment").value) || 0;
 
     // Calculate total number of months
-    const totalMonths = loanTerm;
+    const totalMonths = loanTermMonths;
     const monthlyInterestRate = interestRate / 100 / 12;
     let balance = loanAmount;
     let totalInterestPaid = 0;
@@ -35,7 +33,7 @@ function calculateAmortization() {
     // Amortization calculations
     for (let month = 1; month <= totalMonths; month++) {
         const interestPayment = balance * monthlyInterestRate;
-        const principalPayment = (balance * (monthlyInterestRate * Math.pow(1 + monthlyInterestRate, totalMonths))) /
+        const principalPayment = (loanAmount * (monthlyInterestRate * Math.pow(1 + monthlyInterestRate, totalMonths))) /
             (Math.pow(1 + monthlyInterestRate, totalMonths) - 1) - interestPayment;
 
         balance -= (principalPayment + additionalMonthlyPayment);
@@ -143,7 +141,7 @@ function renderAmortizationChart(payments) {
 }
 
 // Attach event listener to calculate amortization when inputs change
-document.querySelectorAll('#loanBeginDate, #loanEndDate, #additionalMonthlyPayment, #additionalYearlyPayment').forEach(input => {
+document.querySelectorAll('#loanBeginDate, #additionalMonthlyPayment, #additionalYearlyPayment').forEach(input => {
     input.addEventListener('input', calculateAmortization);
 });
 
